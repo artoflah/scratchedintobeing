@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sed:*)",
+      "Read(//Users/milahclark/Desktop/Desktop - mi'lah's MacBook Air/fall24/fall25/scratchedintobeingver2/**)",
+      "Bash(node:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

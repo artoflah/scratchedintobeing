@@ -1,0 +1,920 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'cityburn';
+    src: url(fonts/cityburn-©.ttf);
+}
+
+@font-face {
+    font-family: 'switzerland';
+    src: url(fonts/Switzerland.ttf);
+}
+
+body {
+    font-family: 'Helvetica', Courier, monospace;
+    background-color: #f5f5f5;
+    color: #333;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    z-index: 300;
+    pointer-events: auto;
+    font-size: 11px;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left !important;
+    background: rgba(245, 245, 245, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+.instructions-panel {
+    position: fixed;
+    top: 110px;
+    left: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    font-size: 10px;
+    z-index: 301;
+    background: rgba(245, 245, 245, 0.95);
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    pointer-events: auto;
+    color: #000;
+    font-family: inherit;
+}
+
+.header-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    pointer-events: auto;
+    transition: all 0.4s ease;
+}
+
+.header-col:first-child {
+    align-items: flex-start;
+    text-align: left !important;
+}
+
+.header-col:nth-child(2),
+.header-col:nth-child(3) {
+    align-items: left;
+    text-align: left !important;
+}
+
+.header-col:last-child {
+    align-items: flex-end;
+    text-align: left !important;
+}
+
+.header-item1 {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #333;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.header-item {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #333;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.spacer {
+    height: 10px;
+}
+
+.time {
+    font-size: 11px;
+    color: #333;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+
+.location,
+.contact {
+    font-size: 11px;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+    color: #333;
+}
+
+.about-link {
+    color: #333;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: opacity 0.4s ease;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.about-link:hover {
+    opacity: 0.6;
+}
+
+/* ========================================
+   INDEX PAGE STYLES
+   ======================================== */
+
+.intro-section {
+    position: fixed;
+    top: 100px;
+    left: 0;
+    right: 0;
+    padding: 0 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    z-index: 50;
+    pointer-events: none;
+    font-size: 11px;
+}
+
+.intro-col {
+    line-height: 1.6;
+}
+
+.intro-col:nth-child(2) p {
+    font-size: 10px;
+    color: #333;
+}
+
+main {
+    min-height: 2000vh;
+    position: relative;
+}
+
+#connection-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#connection-lines line {
+    stroke: #333;
+    stroke-width: 2;
+    opacity: 0;
+    stroke-dasharray: 5, 5;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#connection-lines line.visible {
+    opacity: 0.4;
+}
+
+#connection-lines circle {
+    fill: #333;
+    opacity: 0;
+    r: 4;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#connection-lines circle.visible {
+    opacity: 0.5;
+}
+
+.image-container {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+}
+
+.image-container.visible {
+    opacity: 1;
+}
+
+.image-container.initially-hidden {
+    opacity: 0 !important;
+}
+
+.canvas-wrapper {
+    position: relative;
+    cursor: crosshair;
+    overflow: hidden;
+    background-color: #ddd;
+    display: inline-block;
+    filter: grayscale(1) brightness(1.1);
+    transition: filter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.canvas-wrapper img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-container:hover .canvas-wrapper,
+.image-container.js-hover .canvas-wrapper {
+    filter: grayscale(0) brightness(1);
+}
+
+.drawing-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: block;
+    pointer-events: none;
+    touch-action: none;
+}
+
+#full-page-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    pointer-events: auto;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.image-number {
+    margin-top: 5px;
+    font-size: 10px;
+    opacity: 0.5;
+    text-align: right;
+    transition: opacity 0.3s ease;
+}
+
+.image-container:hover .image-number,
+.image-container.js-hover .image-number {
+    opacity: 0.8;
+}
+
+.tools-panel {
+    position: fixed;
+    top: 200px;
+    left: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 10px;
+    z-index: 300;
+    background: rgba(245, 245, 245, 0.95);
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    pointer-events: auto;
+}
+
+.tools-panel:hover {
+    background: rgba(245, 245, 245, 1);
+}
+
+.tool-item {
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease;
+    pointer-events: auto;
+}
+
+.tool-item:hover,
+.tool-item.active {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+.color-option {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    border: 1px solid #999;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+    pointer-events: auto;
+}
+
+.color-option:hover {
+    transform: scale(1.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.color-option.active {
+    box-shadow: 0 0 0 2px #333;
+}
+
+.divider {
+    opacity: 0.3;
+}
+
+.clear-all {
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease;
+    pointer-events: auto;
+}
+
+.clear-all:hover {
+    transform: translateY(-1px);
+    opacity: 1;
+}
+
+.vertical-logo {
+    position: fixed;
+    right: 0px;
+    top: 51.5%;
+    transform: translateY(-50%);
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.9;
+    transition: opacity 0.4s ease;
+}
+
+.vertical-logo:hover {
+    opacity: 1;
+}
+
+.vertical-logo img {
+    height: 102vh;
+    width: auto;
+    display: block;
+}
+
+/* ========================================
+   ABOUT PAGE STYLES
+   ======================================== */
+
+.about-page {
+    min-height: 100vh;
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+/* Text Section */
+.about-text-section {
+    padding: 0 30px 120px;
+}
+
+.about-content-main {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 6fr;
+    gap: 90px;
+}
+
+.about-left h1 {
+    font-size: 14px;
+    font-weight: normal;
+    margin-top: 60px;
+}
+
+.about-year {
+    font-size: 10px;
+    opacity: 0.6;
+}
+
+.about-right {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.about-section {
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.about-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.about-section h2 {
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+.about-section p {
+    font-size: 11px;
+    line-height: 1.8;
+    transition: all 0.3s ease;
+}
+
+.about-section p:last-child {
+    margin-bottom: 0;
+}
+
+.about-section a {
+    color: #333;
+    transition: opacity 0.3s ease;
+}
+
+.about-section a:hover {
+    opacity: 0.6;
+}
+
+/* Archive Section */
+.about-archive-section {
+    padding: 0 30px 80px;
+}
+
+.archive-header {
+    max-width: 1400px;
+    margin: 0 auto 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.archive-header.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.archive-header h2 {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.archive-count {
+    font-size: 11px;
+    opacity: 0.5;
+}
+
+/* Archive Grid - centered layout */
+.archive-grid {
+    padding-top: 60px;
+    display: grid;
+    grid-template-columns: repeat(4, 200px);
+    gap: 100px;
+    max-width: 1400px;
+    margin: 0 auto;
+    justify-content: left;
+}
+
+.archive-item {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #e5e5e5;
+    opacity: 1; /* fully visible immediately */
+    transform: none; /* no slide-up effect */
+    transition: none; /* no fade/transform on load */
+    cursor: pointer;
+  }
+
+.archive-item.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.archive-grid:hover .archive-item {
+    opacity: 0.3;
+    transition: opacity 0.4s ease;
+}
+
+.archive-grid:hover .archive-item:hover {
+    opacity: 1;
+}
+
+/* Base state — all images visible in grayscale */
+.archive-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1);
+    transition: 
+      filter 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.4s ease;
+  }
+  
+  /* Slight hover zoom + color restoration */
+  .archive-item:hover img {
+    filter: grayscale(0);
+    transform: scale(1.08);
+  }
+
+  .archive-label {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px 8px;
+    backdrop-filter: blur(10px);
+    opacity: 1; /* always visible */
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+.archive-item:hover .archive-label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Large format items (foldouts) */
+.archive-item-large {
+    grid-column: span 2;
+    aspect-ratio: 2/1;
+}
+/* ========================================
+   MODAL STYLES
+   ======================================== */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.805);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    overflow: hidden;
+}
+
+.modal-tall{
+    padding: 30px 30px 10px 30px; 
+}
+
+.modal-overlay.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px 60px 15px 60px; 
+    max-width: 700px;   /* was 500px */
+    max-height: 85vh;   /* slightly taller */
+    overflow-y: auto;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #333;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.modal-close:hover {
+    opacity: 1;
+}
+
+.modal-image {
+    width: 100%;
+    height: auto;
+    max-height: 650px;
+    object-fit: contain;
+    display: block;
+}
+
+.modal-info {
+    font-size: 10px;
+    line-height: 1.6;
+    padding-top: 10px;
+}
+
+.modal-info h3 {
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+.modal-detail {
+    margin-bottom: 12px;
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 15px;
+}
+
+.modal-label {
+    font-weight: normal;
+    opacity: 0.6;
+    text-transform: uppercase;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+}
+
+.modal-value {
+    font-size: 10px;
+}
+
+/* Taller modal layout for long portrait images */
+.modal-content.modal-tall {
+    max-width: 685px;       /* narrower than wide */
+    max-height: 95vh;       /* taller window */
+    padding: 40px 60px 20px 60px; 
+    margin-bottom: -5px;
+}
+
+.modal-tall .modal-image {
+    max-height: 725px;     /* allows taller images to fill screen */
+    width: auto;
+    margin: 0 auto 30px;
+    display: block;
+}
+
+
+.modal-content.modal-large {
+    max-width: 1400px;        /* ← Change this to make modal wider (try 1600px or 1800px) */
+    max-height: 90vh;  
+    padding: 40px 60px 10px 60px;        /* ← Keep at 90vh to fit screen */
+}
+
+.modal-large .modal-image {
+    max-height: 900px;        /* ← Change this to make image taller (try 1000px or 1100px) */
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .about-content-main {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .archive-grid {
+        grid-template-columns: repeat(3, 200px);
+        gap: 30px;
+        margin: 0 auto;
+    }
+
+    .archive-item-large {
+        grid-column: span 2;
+    }
+
+    .modal-overlay.active {
+        padding-left: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .about-text-section {
+        padding: 0 20px 80px;
+    }
+
+    .about-content-main {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .about-archive-section {
+        padding: 0 20px 60px;
+    }
+
+    .archive-grid {
+        grid-template-columns: repeat(2, 180px);
+        gap: 20px;
+        margin: 0 auto;
+    }
+
+    .archive-item-large {
+        grid-column: span 1;
+        aspect-ratio: 1;
+    }
+
+    .canvas-wrapper {
+        width: 300px;
+        height: 225px;
+        transform: translateZ(0);
+        will-change: filter;
+    }
+
+    .image-container {
+        position: absolute !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .info-panel {
+        display: none;
+    }
+
+    .tools-panel {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 15px;
+    }
+
+    .modal-content {
+        padding: 30px 20px;
+        max-width: 90%;
+        max-height: 85vh;
+    }
+
+    .modal-overlay.active {
+        padding-left: 20px;
+        justify-content: flex-start;
+    }
+
+    .modal-detail {
+        grid-template-columns: 80px 1fr;
+        gap: 10px;
+    }
+
+    .modal-image {
+        max-height: 200px;
+    }
+}/* ========================================
+   BOOK IMAGES SECTION (Add to style.css)
+   ======================================== */
+
+/* Large hero image on the left under title */
+.about-left {
+    text-align: left;
+}
+
+.book-image-hero {
+    margin-top: 60px;
+    width: 250%;
+    max-width: none;
+    opacity: 0;
+    transform: translateY(20px);
+    position: relative;
+    left: 0;
+    margin-left: 0;
+    text-align: left;
+}
+
+.book-image-hero.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transform: translatex(-250px);
+}
+
+.book-image-hero img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(0.3);
+    object-fit: cover;
+    object-position: left center;
+    margin-left: 0;
+    float: left;
+}
+
+.book-image-hero:hover img {
+    filter: grayscale(0);
+    transform: scale(1.02);
+}
+
+.book-image-caption {
+    margin-top: 5px;
+    font-size: 9px;
+    opacity: 0.6;
+    text-align: right;
+    line-height: 15;
+}
+
+/* Archive-style grid for bottom images */
+.book-archive-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 500px);
+    gap: 100px;
+    max-width: 1400px;
+    margin: 0 auto;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.book-archive-item {
+    position: relative;
+    aspect-ratio: 1;
+    opacity: 1;
+    cursor: pointer;
+    transition: opacity 0.4s ease;
+}
+
+.book-archive-grid:hover .book-archive-item {
+    opacity: 0.3;
+}
+
+.book-archive-grid:hover .book-archive-item:hover {
+    opacity: 1;
+}
+
+.book-archive-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1);
+    transition: 
+      filter 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10000000;
+    
+}
+
+.book-archive-item:hover img {
+    filter: grayscale(0);
+    transform: scale(1.08);
+}
+
+.book-archive-label {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px 8px;
+    backdrop-filter: blur(10px);
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    line-height: 1.4;
+}
+
+.book-archive-item:hover .book-archive-label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .book-archive-grid {
+        grid-template-columns: repeat(3, 200px);
+        gap: 30px;
+        padding: 60px 30px 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .book-image-hero {
+        margin-top: 40px;
+    }
+
+    .book-archive-grid {
+        grid-template-columns: repeat(2, 180px);
+        gap: 20px;
+        padding: 40px 20px 30px;
+    }
+
+    .book-archive-label {
+        font-size: 8px;
+        padding: 3px 6px;
+    }
+}
