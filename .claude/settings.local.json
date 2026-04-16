@@ -3,7 +3,9 @@
     "allow": [
       "Bash(sed:*)",
       "Read(//Users/milahclark/Desktop/Desktop - mi'lah's MacBook Air/fall24/fall25/scratchedintobeingver2/**)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(python3:*)",
+      "Bash(sips -g pixelWidth -g pixelHeight ./images/LOGO.png)"
     ],
     "deny": [],
     "ask": []
