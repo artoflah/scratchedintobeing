@@ -169,10 +169,6 @@ main {
     position: relative;
 }
 
-main#gallery {
-    z-index: 400;
-}
-
 #connection-lines {
     position: absolute;
     top: 0;
