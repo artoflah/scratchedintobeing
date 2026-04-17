@@ -74,7 +74,11 @@ header {
     text-align: left !important;
 }
 
-.header-col:nth-child(2),
+.header-col:nth-child(2) {
+    align-items: center;
+    text-align: center !important;
+}
+
 .header-col:nth-child(3) {
     align-items: left;
     text-align: left !important;
