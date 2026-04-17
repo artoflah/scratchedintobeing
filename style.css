@@ -75,8 +75,8 @@ header {
 }
 
 .header-col:nth-child(2) {
-    align-items: center;
-    text-align: center !important;
+    align-items: flex-start;
+    text-align: left !important;
 }
 
 .header-col:nth-child(3) {

@@ -375,6 +375,8 @@ const imageFiles = [
   
   // --- Initialization ---
   document.addEventListener('DOMContentLoaded', async () => {
+    updateTime();
+    setInterval(updateTime, 60000);
     await createGallery();
     initializeFullPageCanvas();
     setupHoverEffects();
@@ -403,8 +405,6 @@ const imageFiles = [
     requestAnimationFrame(revealStep);
   
     handleScroll();
-    updateTime();
-    setInterval(updateTime, 60000);
   });
   
   window.addEventListener('scroll', () => {
