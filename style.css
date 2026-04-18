@@ -443,7 +443,7 @@ main {
 
 /* Archive Section */
 .about-archive-section {
-    padding: 0 calc(36vh + 30px) 80px 30px;
+    padding: 0 calc(42vh + 30px) 80px 90px;
 }
 
 .archive-header {
